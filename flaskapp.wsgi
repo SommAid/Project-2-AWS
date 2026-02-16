@@ -1,13 +1,13 @@
 import sys
 import logging
 
-# Configure logging to see errors in the Apache logs
+# Enable Apache Errorss
 logging.basicConfig(stream=sys.stderr)
 
-# Define the path to your app
+# Flask path
 PROJECT_DIR = '/var/www/html/flaskapp'
 if PROJECT_DIR not in sys.path:
     sys.path.insert(0, PROJECT_DIR)
 
-# Import the 'app' object from your 'flaskapp.py' file
+# Import app from flaskapp.py
 from flaskapp import app as application
