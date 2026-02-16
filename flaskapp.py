@@ -9,7 +9,7 @@ db_path = os.path.join(BASE_DIR, 'users.db')
 UPLOAD_FOLDER = os.path.join(BASE_DIR, 'uploads')
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-# Database Setup
+# Database Initialization
 def init_db():
     conn = sqlite3.connect(db_path)
     c = conn.cursor()
@@ -21,15 +21,14 @@ def init_db():
 
 init_db()
 
+# Landing Page
 @app.route('/')
 def landing():
-    # New Landing Page
     return render_template('landing.html')
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        # Removed File Upload from here
         username = request.form['username']
         password = request.form['password']
         firstname = request.form['firstname']
@@ -44,11 +43,12 @@ def register():
         conn.commit()
         conn.close()
 
-        # Redirect to login after registration
+        # After registering go to the login page
         return redirect(url_for('login'))
     
     return render_template('register.html')
 
+# Login Page
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -67,6 +67,7 @@ def login():
     
     return render_template('login.html')
 
+# Get user profile
 @app.route('/profile/<username>')
 def profile(username):
     conn = sqlite3.connect(db_path)
@@ -76,7 +77,7 @@ def profile(username):
     conn.close()
     return render_template('profile.html', user=user)
 
-# New Route specifically for File Upload
+# File Upload
 @app.route('/upload/<username>', methods=['POST'])
 def upload_file(username):
     file = request.files['file']
@@ -88,7 +89,7 @@ def upload_file(username):
         content = open(file_path, 'r').read()
         word_count = len(content.split())
         
-        # Update DB
+        # Update DB witht he word count
         conn = sqlite3.connect(db_path)
         c = conn.cursor()
         c.execute("UPDATE users SET word_count=? WHERE username=?", (word_count, username))
